@@ -53,7 +53,7 @@ public class ModuleTwo {
       BigInteger delta = calculateDelta(hugeRandomPrime, A, B);
 
       // jesli delta == 0 to jeszcze raz
-      if(delta.equals(ZERO)) {
+      if (delta.equals(ZERO)) {
         continue;
       }
 
@@ -72,9 +72,11 @@ public class ModuleTwo {
     System.out.println("P: " + ellipticCurve.getP());
 
     while (true) {
+      // losujemy X nalezace do krzywej
       BigInteger X = randomBigIntegerInRange(ZERO, ellipticCurve.getP().subtract(ONE));
       X = new BigInteger("586161351238789257385941437290446893879498726098291302221253657079196940069133555438529832611354");
 
+      // obliczamy funkcje // X^3+AX+B % P
       final BigInteger fx = functionExcerciseTwo(
           X,
           ellipticCurve.getA(),
@@ -82,13 +84,14 @@ public class ModuleTwo {
           ellipticCurve.getP()
       );
 
-
-       if(isSquareReminder(ellipticCurve.getP(), fx)) {
-         continue;
-       }
+      // sprawdzamy czy Fx jest reszta kwadratowa
+      if (isSquareReminder(ellipticCurve.getP(), fx)) {
+        continue;
+      }
 
       System.out.println("Fx: " + fx);
 
+      // obliczamy y^2 f(x) mod p i pierwiastkujemy
       BigInteger Y = squareRootMod(ellipticCurve.getP(), fx.mod(ellipticCurve.getP()));
 
       return new Point(X, Y);
@@ -136,7 +139,8 @@ public class ModuleTwo {
     BigInteger firstBraces = valueOf(3).multiply(pp.getX().pow(2)).add(ellipticCurve.getA());
     BigInteger secondBraces = modInv(
         new BigDecimal(ellipticCurve.getP()),
-        new BigDecimal(valueOf(2).multiply(pp.getY())));
+        new BigDecimal(valueOf(2).multiply(pp.getY()))
+    );
 
     BigInteger lambda = firstBraces.multiply(secondBraces).mod(ellipticCurve.getP());
 
@@ -146,7 +150,7 @@ public class ModuleTwo {
     // y3 = λ(x1 − x3) − y1 (mod p)
     BigInteger y3 = lambda.multiply(pp.getX().subtract(x3)).subtract(pp.getY()).mod(ellipticCurve.getP());
 
-    return new Point(x3,y3);
+    return new Point(x3, y3);
   }
 
   // P + Q
@@ -157,7 +161,8 @@ public class ModuleTwo {
     BigInteger firstBraces = q.getY().subtract(pp.getY());
     BigInteger secondBraces = modInv(
         new BigDecimal(ellipticCurve.getP()),
-        new BigDecimal(q.getX().subtract(pp.getX())));
+        new BigDecimal(q.getX().subtract(pp.getX()))
+    );
 
     BigInteger lambda = firstBraces.multiply(secondBraces).mod(ellipticCurve.getP());
 

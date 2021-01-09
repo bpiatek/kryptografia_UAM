@@ -67,7 +67,8 @@ public class ModuleOne {
     }
     BigInteger fastPowerModulo = fastPowerModulo(p, p.subtract(ONE).divide(TWO), element);
 
-    return fastPowerModulo.equals(ONE);
+    final boolean equals = fastPowerModulo.equals(ONE);
+    return equals;
   }
 
 

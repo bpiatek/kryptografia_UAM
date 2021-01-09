@@ -45,7 +45,7 @@ class ModuleTwoHelper {
   }
 
   // ******************************* ZAD 2 *******************************
-  // X3+AX+B % P
+  // X^3+AX+B % P
   public static BigInteger functionExcerciseTwo(BigInteger X, BigInteger A, BigInteger B, BigInteger hugePrime) {
     BigInteger xPow3 = X.pow(3);
     BigInteger aMulX = A.multiply(X);
