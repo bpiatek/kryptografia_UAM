@@ -33,7 +33,7 @@ public class ModuleTwo {
     // losuj liczbe około 300 bitów
     BigInteger random = ModuleOne.rand(300);
     BigInteger hugeRandomPrime = valueOf(4L).multiply(random).add(valueOf(3));
-    hugeRandomPrime = new BigInteger("1241282861446847839170228926026828716450703184678734522350890097344181755440518117399239645529943");
+    hugeRandomPrime = new BigInteger("1545896392024849553318998429414065818529154797206629950445025537055830163719510571736431587");
 
     // jesli nie jest liczba pierwsza to jeszcze raz losuj
     if (!isPrime(hugeRandomPrime)) {
@@ -46,8 +46,8 @@ public class ModuleTwo {
       BigInteger A = randomBigIntegerInRange(ZERO, hugeRandomPrime.subtract(ONE));
       BigInteger B = randomBigIntegerInRange(ZERO, hugeRandomPrime.subtract(ONE));
 
-      A = new BigInteger("251253937428096535381749615186704996827671824623713534194869720190371340712257034260791734664079");
-      B = new BigInteger("468890980645387444649294984369242921655474302273793566616065070624554918380706937944353524200293");
+//      A = new BigInteger("251253937428096535381749615186704996827671824623713534194869720190371340712257034260791734664079");
+//      B = new BigInteger("468890980645387444649294984369242921655474302273793566616065070624554918380706937944353524200293");
 
       // obliczamy delte / wyroznik
       BigInteger delta = calculateDelta(hugeRandomPrime, A, B);
