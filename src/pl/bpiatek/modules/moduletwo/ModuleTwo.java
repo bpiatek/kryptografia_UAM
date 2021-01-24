@@ -10,6 +10,7 @@ import static pl.bpiatek.modules.moduletwo.ModuleTwoHelper.randomBigIntegerInRan
 
 import pl.bpiatek.modules.models.EllipticCurve;
 import pl.bpiatek.modules.models.Point;
+import pl.bpiatek.modules.moduleone.ModuleOne;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -122,12 +123,32 @@ public class ModuleTwo {
       Wynik:R= (x3, y3)∈E(Fp) taki, że R=P⊕Q.
    */
   // P + P
+  public static Point addPoints(Point p, Point q, EllipticCurve ellipticCurve)
+  {
+    if (p.getX() == null && p.getY() == null) {
+      return new Point(q.getX(), q.getY());
+    }
+    if (q.getX() == null && q.getY() == null) {
+      return new Point(p.getX(), p.getY());
+    }
+    if (! p.getX().equals(q.getX())) {
+      return pPlusQ(p, q, ellipticCurve);
+    }
+    if (p.getX().equals(q.getX()) && p.getY().equals(q.getY())) {
+      return pPlusP(p, ellipticCurve);
+    }
+    if (p.getX().equals(q.getX()) && p.getY().multiply(valueOf(-1)).equals(q.getY())) {
+      return new Point(null, null);
+    }
+    throw new RuntimeException("Wrong points");
+  }
+
   public static Point pPlusP(Point pp, EllipticCurve ellipticCurve) {
     // obliczamy lambde λ = (3x1^2 + A)(2y1)^−1 mod p
     BigInteger firstBraces = valueOf(3).multiply(pp.getX().pow(2)).add(ellipticCurve.getA());
     BigInteger secondBraces = modInv(
-        new BigDecimal(ellipticCurve.getP()),
-        new BigDecimal(valueOf(2).multiply(pp.getY()))
+        (ellipticCurve.getP()),
+        (valueOf(2).multiply(pp.getY()))
     );
 
     BigInteger lambda = firstBraces.multiply(secondBraces).mod(ellipticCurve.getP());
@@ -142,21 +163,21 @@ public class ModuleTwo {
   }
 
   // P + Q
-  public static Point pPlusQ(Point pp, Point q, EllipticCurve ellipticCurve) {
+  public static Point pPlusQ(Point p, Point q, EllipticCurve ellipticCurve) {
     // obliczamy lambde λ = (y2 − y1)(x2 − x1)^−1 (mod p)
-    BigInteger firstBraces = q.getY().subtract(pp.getY());
+    BigInteger firstBraces = q.getY().subtract(p.getY());
     BigInteger secondBraces = modInv(
-        new BigDecimal(ellipticCurve.getP()),
-        new BigDecimal(q.getX().subtract(pp.getX()))
+        ellipticCurve.getP(),
+        q.getX().subtract(p.getX())
     );
 
     BigInteger lambda = firstBraces.multiply(secondBraces).mod(ellipticCurve.getP());
 
     // x3 = λ^2 − x1 − x2 (mod p)
-    BigInteger x3 = lambda.pow(2).subtract(pp.getX()).subtract(q.getX()).mod(ellipticCurve.getP());
+    BigInteger x3 = lambda.pow(2).subtract(p.getX()).subtract(q.getX()).mod(ellipticCurve.getP());
 
     // y3 = λ(x1 − x3) − y1 (mod p)
-    BigInteger y3 = lambda.multiply(pp.getX().subtract(x3)).subtract(pp.getY()).mod(ellipticCurve.getP());
+    BigInteger y3 = lambda.multiply(p.getX().subtract(x3)).subtract(p.getY()).mod(ellipticCurve.getP());
 
     return new Point(x3, y3);
   }

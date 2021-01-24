@@ -49,17 +49,17 @@ public class ModuleThree {
   // ZAD. 2 Zaimplementuj algorytm, który oblicza wielokrotność punktu na krzywej eliptycznej.
   public static Point multiplyEllipticCurvePoint(EllipticCurve ellipticCurve, Point point, BigInteger n) {
     Point q = point;
-    Point r = new Point(ZERO, ZERO);
+    Point r = new Point(null, null);
 
     // kiedy n > 0
     while (n.compareTo(ZERO) == 1) {
       // jesli n % 2 = 1
-      if (n.mod(TWO).compareTo(ONE) == 0) {
-        r = ModuleTwo.pPlusQ(r, q, ellipticCurve);
+      if (n.mod(TWO).equals(ONE)) {
+        r = ModuleTwo.addPoints(r, q, ellipticCurve);
         n = n.subtract(ONE);
       }
 
-      q = ModuleTwo.pPlusP(q, ellipticCurve);
+      q = ModuleTwo.addPoints(q, q, ellipticCurve);
       n = n.divide(TWO);
     }
 
@@ -71,19 +71,16 @@ public class ModuleThree {
     BigInteger p = ellipticCurve.getP();
     BigInteger u = valueOf(U_100);
     int uu = U_100;
-
-
     BigInteger n = p.divide(m.add(TWO));
     if (!(n.compareTo(u) == 1)) {
       throw new RuntimeException("M is to big!");
     }
 
-    for (int j = 1; j <= uu; j++) {
+    for (int j = 0; j < uu; j++) {
       // x = m * u + j mod p
       BigInteger x = m.multiply(u).add(valueOf(j)).mod(p);
       // f = x3 + Ax + b mod p
       BigInteger f = x.pow(3).add(ellipticCurve.getA().multiply(x)).add(ellipticCurve.getB()).mod(p);
-
       if (ModuleOne.isSquareReminder(p, f)) {
         BigInteger y = ModuleOne.squareRootMod(p, f);
         return new Point(x, y);
@@ -124,8 +121,9 @@ public class ModuleThree {
   }
 
   // ZAD. 6 Zaimplementuj algorytm, który dekoduje punkt krzywej eliptycznej.
-  public static BigInteger decode(Point m) {
-    return m.getX().min(ONE).divide(valueOf(U_100));
+  public static BigInteger decode(Point m, EllipticCurve ellipticCurve) {
+
+    return m.getX().mod(ellipticCurve.getP()).divide(valueOf(U_100));
   }
 
   private static boolean biggerThanOne(BigInteger number) {

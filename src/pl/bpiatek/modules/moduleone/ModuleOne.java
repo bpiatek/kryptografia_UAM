@@ -27,23 +27,24 @@ public class ModuleOne {
   }
 
   // 2. Zaimplementuj funkcję obliczania odwrotności w grupie Φ(n). Wykorzystaj Rozszerzony Algorytm Euklidesa.
-  public static BigInteger modInv(BigDecimal n, BigDecimal element) {
-    BigDecimal A = n;
-    BigDecimal B = element;
-    BigDecimal U = BigDecimal.ZERO;
-    BigDecimal V = BigDecimal.ONE;
+  public static BigInteger modInv(BigInteger n, BigInteger element) {
+    BigInteger A = n;
+    BigInteger B = element.mod(n);
+    BigInteger U = BigInteger.ZERO;
+    BigInteger V = BigInteger.ONE;
 
-    while(B.compareTo(BigDecimal.ZERO) != 0) {
-      BigDecimal q = A.divide(B, 0, FLOOR);
-      BigDecimal temp1 = A.subtract(q.multiply(B));
+    while(!B.equals(BigInteger.ZERO)) {
+      BigInteger q = A.divide(B);
+      BigInteger A_copy = A;
       A = B;
-      B = temp1;
-      BigDecimal temp2 = U.subtract(q.multiply(V));
+      B = A_copy.subtract(q.multiply(B));
+      BigInteger U_copy = U;
       U = V;
-      V = temp2;
+      V = U_copy.subtract(q.multiply(V));
     }
 
-    return U.toBigInteger().mod(n.toBigInteger());
+//    System.out.println(String.format("modInv n=%d element=%d eq %d", n, element, U.mod(n)));
+    return U.mod(n);
   }
 
   // 3. Zaimplementuj funkcję efektywnego potęgowania w zbiorze Zn. Wykorzystaj algorytm iterowanego podnoszenia do kwadratu.
@@ -65,7 +66,7 @@ public class ModuleOne {
     if(!isPrime(p)) {
       throw new RuntimeException("Not a prime");
     }
-    BigInteger powerModulo = fastPowerModulo(p, p.subtract(ONE).divide(TWO), element);
+    BigInteger powerModulo = fastPowerModulo(p, element, p.subtract(ONE).divide(TWO));
 
     final boolean equals = powerModulo.compareTo(ONE) == 0;
     return equals;
