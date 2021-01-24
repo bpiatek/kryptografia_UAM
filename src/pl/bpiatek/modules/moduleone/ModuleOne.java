@@ -65,9 +65,9 @@ public class ModuleOne {
     if(!isPrime(p)) {
       throw new RuntimeException("Not a prime");
     }
-    BigInteger fastPowerModulo = fastPowerModulo(p, p.subtract(ONE).divide(TWO), element);
+    BigInteger powerModulo = fastPowerModulo(p, p.subtract(ONE).divide(TWO), element);
 
-    final boolean equals = fastPowerModulo.equals(ONE);
+    final boolean equals = powerModulo.compareTo(ONE) == 0;
     return equals;
   }
 

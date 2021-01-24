@@ -31,10 +31,10 @@ public class EllipticCurve {
 
   @Override
   public String toString() {
-    return "EllipticCurve {\n" +
-           "  p=" + p +
-           ", \n  A=" + A +
-           ", \n  B=" + B +
+    return "EllipticCurve {" +
+           "\n  p=" + p +
+           "\n  A=" + A +
+           "\n  B=" + B +
            "\n}";
   }
 }

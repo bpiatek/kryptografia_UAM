@@ -10,7 +10,6 @@ import static pl.bpiatek.modules.moduletwo.ModuleTwoHelper.randomBigIntegerInRan
 
 import pl.bpiatek.modules.models.EllipticCurve;
 import pl.bpiatek.modules.models.Point;
-import pl.bpiatek.modules.moduleone.ModuleOne;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,12 +27,11 @@ public class ModuleTwo {
       Dane: p= 3 (mod 4) duża liczba pierwsza (ok. 300 bitów)
       Wynik:A, B∈Fp takie, że E:Y2=X3+AX+B jest krzywą nad F
   */
-  public static EllipticCurve generateEllipticCurve(BigDecimal randPrimeFromUser) {
-    System.out.println("ZADANIE 1:\n");
+  public static EllipticCurve generateEllipticCurve(BigInteger hugeRandomPrime) {
     // losuj liczbe około 300 bitów
-    BigInteger random = ModuleOne.rand(300);
-    BigInteger hugeRandomPrime = valueOf(4L).multiply(random).add(valueOf(3));
-    hugeRandomPrime = new BigInteger("1545896392024849553318998429414065818529154797206629950445025537055830163719510571736431587");
+//    BigInteger random = ModuleOne.rand(300);
+//    BigInteger hugeRandomPrime = valueOf(4L).multiply(random).add(valueOf(3));
+//    hugeRandomPrime = new BigInteger("1545896392024849553318998429414065818529154797206629950445025537055830163719510571736431587");
 
     // jesli nie jest liczba pierwsza to jeszcze raz losuj
     if (!isPrime(hugeRandomPrime)) {
@@ -57,7 +55,6 @@ public class ModuleTwo {
         continue;
       }
 
-      System.out.println("DELTA: " + delta);
       return new EllipticCurve(hugeRandomPrime, A, B);
     }
   }
@@ -68,13 +65,11 @@ public class ModuleTwo {
       Wynik:P= (x, y)∈E (Fp)
    */
   public static Point randomPointOnEllipticCurve(EllipticCurve ellipticCurve) {
-    System.out.println("\nZadanie 2:\n");
-    System.out.println("P: " + ellipticCurve.getP());
 
     while (true) {
       // losujemy X nalezace do krzywej
       BigInteger X = randomBigIntegerInRange(ZERO, ellipticCurve.getP().subtract(ONE));
-      X = new BigInteger("586161351238789257385941437290446893879498726098291302221253657079196940069133555438529832611354");
+//      X = new BigInteger("586161351238789257385941437290446893879498726098291302221253657079196940069133555438529832611354");
 
       // obliczamy funkcje // X^3+AX+B % P
       final BigInteger fx = functionExcerciseTwo(
@@ -89,8 +84,6 @@ public class ModuleTwo {
         continue;
       }
 
-      System.out.println("Fx: " + fx);
-
       // obliczamy y^2 f(x) mod p i pierwiastkujemy
       BigInteger Y = squareRootMod(ellipticCurve.getP(), fx.mod(ellipticCurve.getP()));
 
@@ -100,8 +93,6 @@ public class ModuleTwo {
 
   // 3 - does point belong to elliptic curve
   public static boolean isEllipticCurvePoint(EllipticCurve ellipticCurve, Point point) {
-    System.out.println("\nZadanie 3:\n");
-
     //czy lewa strona jest równa prawej? wzór y^2 = x^3 + ax + b mod p
     BigInteger left = point.getY()
         .pow(2)
@@ -122,7 +113,6 @@ public class ModuleTwo {
       Wynik:−P= (x,−y)∈E(Fp)
    */
   public static Point ellipticPointNegation(Point point, EllipticCurve ellipticCurve) {
-    System.out.println("\nZADANIE 4:\n");
     return new Point(point.getX(), point.getY().negate().mod(ellipticCurve.getP()));
   }
 
@@ -133,8 +123,6 @@ public class ModuleTwo {
    */
   // P + P
   public static Point pPlusP(Point pp, EllipticCurve ellipticCurve) {
-    System.out.println("\nZADANIE 5: P + P\n");
-
     // obliczamy lambde λ = (3x1^2 + A)(2y1)^−1 mod p
     BigInteger firstBraces = valueOf(3).multiply(pp.getX().pow(2)).add(ellipticCurve.getA());
     BigInteger secondBraces = modInv(
@@ -155,8 +143,6 @@ public class ModuleTwo {
 
   // P + Q
   public static Point pPlusQ(Point pp, Point q, EllipticCurve ellipticCurve) {
-    System.out.println("\nP + Q\n");
-
     // obliczamy lambde λ = (y2 − y1)(x2 − x1)^−1 (mod p)
     BigInteger firstBraces = q.getY().subtract(pp.getY());
     BigInteger secondBraces = modInv(
